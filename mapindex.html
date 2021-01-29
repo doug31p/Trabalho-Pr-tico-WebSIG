@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Vector Basemaps</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+  <!-- Load Leaflet from CDN -->
+  <link rel="stylesheet" type="text/css" href="./css/main.css">
+ <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+
+  <!-- Load Esri Leaflet from CDN -->
+  <script src="https://unpkg.com/esri-leaflet@2.5.3/dist/esri-leaflet.js"
+    integrity="sha512-K0Vddb4QdnVOAuPJBHkgrua+/A9Moyv8AQEWi0xndQ+fqbRfAFd47z4A9u1AW/spLO0gEaiE1z98PK1gl5mC5Q=="
+    crossorigin=""></script>
+
+  <style>
+   
+    #map { position: absolute; margin-top: 200px; margin-right: 100px; margin-left: 50px; top:0; bottom:0; right:0; left:0; width: 600px; height: 500px;}
+  </style>
+</head>
+<body>
+
+  
+
+<link rel="stylesheet" href="https://unpkg.com/mapbox-gl@1.13.0/dist/mapbox-gl.css"/>
+<script src="https://unpkg.com/mapbox-gl@1.13.0/dist/mapbox-gl.js"></script>
+
+<!-- load the latest release from the cdn automatically -->
+
+<body>
+  <header class="menu-principal">
+     
+     <div class="header-1">
+     <div class="logo">
+       
+         <img src="./img/FLUP_logo.jpg">
+    
+     </div>
+    </header>
+    <main class="col-100 menu-urls">
+         <div class="header-2">
+             <div class="menu">
+                 <div class ="top">
+                 <ul>
+                     <li><a href="./index.html">Home</a></li>
+                     <li><a href="./Employment.html">Employment</a></li>
+                     <li><a href="./Education.html">Education and Qualifications</a></li>
+                     <li><a href="./Academic.html">Academic Experience</a></li>
+                     <li><a href="./mapindex.html">Map-Pegmatites Project</a></li>
+                     
+                 </ul>
+             </div>
+             </div>
+             <div class="busca">
+                 <input placeholder="Search Something" type="text"/>
+ 
+             </div>
+         </div>
+ 
+     
+     </main>
+<style>
+  #basemaps-wrapper {
+    position: absolute;
+    top: 210px;
+    right: 1280px;
+    z-index: 400;
+    background: white;
+    padding: 10px;
+  }
+  #basemaps {
+    margin-bottom: 5px;
+ 
+  }
+</style>
+
+<div id="map"></div>
+
+<div id="basemaps-wrapper" class="leaflet-bar">
+  <select id="basemaps">
+    <option value="Imagery">Imagery</option>
+    <option value="Topographic">Topographic</option>
+    <option value="Streets">Streets</option>
+  </select>
+</div>
+
+<script>
+  var map = L.map('map').setView([40, -4], 4);
+  var layer = L.esri.basemapLayer('Imagery').addTo(map);
+  var layerLabels;
+
+  function setBasemap (basemap) {
+    if (layer) {
+      map.removeLayer(layer);
+    }
+
+    layer = L.esri.basemapLayer(basemap);
+
+    map.addLayer(layer);
+
+    if (layerLabels) {
+      map.removeLayer(layerLabels);
+    }
+
+    if (
+      basemap === 'ShadedRelief' ||
+      basemap === 'Oceans' ||
+      basemap === 'Gray' ||
+      basemap === 'DarkGray' ||
+      basemap === 'Terrain'
+    ) {
+      layerLabels = L.esri.basemapLayer(basemap + 'Labels');
+      map.addLayer(layerLabels);
+    } else if (basemap.includes('Imagery')) {
+      layerLabels = L.esri.basemapLayer('ImageryLabels');
+      map.addLayer(layerLabels);
+    }
+  }
+
+  document
+    .querySelector('#basemaps')
+    .addEventListener('change', function (e) {
+      var basemap = e.target.value;
+      setBasemap(basemap);
+    });
+
+  var marker =  L.marker([41.614521,  -7.648095],{title:'Adagoi'}); marker.addTo(map);
+   var marker2 = L.marker([39.487379,  -6.323462],{title:'Valdeflores'}).addTo(map);
+   var marker3 = L.marker([ 52.786354,  -6.758135],{title:'Leincester'}).addTo(map);
+  
+
+   
+
+   var image = L.imageOverlay('./img/ADA_ASTER_RGB.jpeg', [[ 41.707371,  -7.801105], [ 41.612885,  -7.620788],[ 41.482321,  -7.731896],[ 41.584189, -7.921708 ]]).addTo(map);     
+   var image2 = L.imageOverlay('./img/ASTER_RGB.jpeg', [[  39.502984,  -6.362884], [  39.463598,   -6.232433],[  39.370142,   -6.274132],[  39.408167,  -6.411649 ]]).addTo(map); 
+   var image3 = L.imageOverlay('./img/LEI_ASTER_RGB.jpeg', [[ 53.337664,   -6.917921], [   53.320268,    -5.790738],[  52.169138,  -6.357862],[ 52.176624,  -7.436120 ]]).addTo(map);     
+  
+   
+                      
+   
+        marker.bindPopup("<b><strong>Adagoi</strong></b> <p>Freguesia = Santiago da Ribeira de Alhariz</p> <p>Portugal</p> <p>Habitantes = 0</p><p> 41.614521,  -7.648095</p> ");
+        marker2.bindPopup("<b><strong>Valdeflores</strong></b> <p>Espanha</p> <p> 96,126 Habitantes </p><p> 39.487379,  -6.323462</p>");
+        marker3.bindPopup("<b><strong>Leinster</strong></b> <p>Irlanda do Sul</p> <p> 2.630,720 Habitantes </p><p> 53.327154,  -7.514084</p>"); 
+        
+
+      
+
+        
+ 
+    var overlayMaps = { 
+
+    "Adagoi":marker,
+     "...Combinação RGB - ASTER":image ,
+    "Valdeflorez":marker2, 
+    "...Combinação RGB -Sentinel":image2,
+    "Leincester":marker3,
+    "...Combinação RGB -Landsat 8":image3,
+    
+    };
+    
+    
+
+  
+
+ 
+
+  L.control.layers(null, overlayMaps).addTo(map);
+  L.control.layers(null, imageOverlay).addTo(map);
+
+
+</script>
+<div class = texto_ex>
+    <h2>Lithium Pegmatites: A European project</h2>
+    <p>
+      This map presents some results of a Project that aims to discover new pegmatite fields for exploration.
+      The method presented in this map is the RGB combination, which is defined as a method where three bands 
+      are inserted in the red, green or blue channels to generate images with different combinations of the hydrothermal and lithological units of the rocks.</p>
+
+
+
+</div>
+</body>
+</html>
